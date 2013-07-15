@@ -3,8 +3,6 @@ Mole
 
 Like a mole digging in it's own way, the library dig and find all the javascript files. While developping javascript application i too often have an error saying 'Object is not a constructor' because i forgot to include a file. To prevent that, a mole is born.
 
-# Mole
-
 ### Preparation
 
 First thing is to include the library.
