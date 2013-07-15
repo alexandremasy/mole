@@ -1,0 +1,6 @@
+--js statics/libs/demo/hello.js 
+--js statics/libs/demo/boom.js 
+--js statics/libs/demo/start.js 
+
+--compilation_level WHITESPACE_ONLY 
+--js_output_file statics/libs/demo.min.js
