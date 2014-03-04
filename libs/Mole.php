@@ -84,7 +84,7 @@ class Mole
 	{
 		$this->list = array();
 		$this->paths = array();
-		$this->root = $root;
+		$this->root = realpath($root);
 		$this->base = $base;
 		$this->minified = $minified;
 		$this->relative = $relative;
@@ -253,20 +253,31 @@ class Mole
 	 *	@param path String
 	 *	@return Array
 	 **/
-	protected function getFilesInDirectory( $path )
+	protected function getFilesInDirectory( $sourcePath )
 	{
 		$ret = array();
 
-		$directory = new RecursiveDirectoryIterator( $path );
-		$iterator = new RecursiveIteratorIterator( $directory, RecursiveIteratorIterator::CHILD_FIRST );
+		$paths = scandir($sourcePath, 0);
+		$len = count($paths);
 
-		foreach( $iterator as $path )
+		for ($i = 0; $i < $len; $i++)
 		{
-			$s = $path->__toString();
-			if ( !$path->isDir() && strstr($s, ".js") !== false )
+			$path = $paths[$i];
+
+			if ($path != '..' && $path != '.')
 			{
-				$file = substr($s, strlen($this->root)+1);
-				array_push( $ret, $file );
+				$fullPath = $sourcePath . '/' . $path;
+
+				if (is_dir($fullPath))
+				{
+					$ret = array_merge($ret, $this->getFilesInDirectory($fullPath));
+				}
+				else if (strstr($path, '.js') !== false)
+				{
+					$path = substr($fullPath, strlen($this->root)+1);
+					$path = str_replace('\\', '/', $path);
+					array_push($ret, $path);
+				}
 			}
 		}
 
